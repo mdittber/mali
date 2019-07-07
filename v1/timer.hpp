@@ -27,6 +27,18 @@ class Timer {
             std::cout << "toc" << std::endl;
         }
 
+        bool is_steady() {
+            return(std::chrono::high_resolution_clock::is_steady);
+        }
+
+        std::string get_timestamp() {
+            std::chrono::time_point sctp = std::chrono::system_clock::now();
+            std::time_t tt = std::chrono::system_clock::to_time_t(sctp);
+            auto t = localtime(&tt);
+            std::string timestamp = std::put_time(t, "%Y-%m-%d %T %Z");
+            return(timestamp);
+        }
+
         long long int elapsed() {
             auto mElapsed = std::chrono::duration_cast<Resolution>(mStop-mStart).count();
             return(mElapsed);
