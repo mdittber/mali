@@ -9,28 +9,29 @@
 template<class Resolution = std::chrono::milliseconds>
 class Timer {
     public:
-        Timer() {
-            std::cout << "Timer constructor" << std::endl;
+        Timer(bool verbose = false): mVerbose(verbose) {
+            if(mVerbose) std::cout << "Timer constructor" << std::endl;
         }
 
         ~Timer() {
-            std::cout << "Timer destructor" << std::endl;
+            if(mVerbose) std::cout << "Timer destructor" << std::endl;
         }
 
         void start() {
-            std::cout << "tic" << std::endl;
+            if(mVerbose) std::cout << "tic" << std::endl;
             mStart = std::chrono::high_resolution_clock::now();
         }
 
         void stop() {
             mStop = std::chrono::high_resolution_clock::now();
-            std::cout << "toc" << std::endl;
+            if(mVerbose) std::cout << "toc" << std::endl;
         }
 
         bool is_steady() {
             return(std::chrono::high_resolution_clock::is_steady);
         }
 
+		/*
         std::string get_timestamp() {
             std::chrono::time_point sctp = std::chrono::system_clock::now();
             std::time_t tt = std::chrono::system_clock::to_time_t(sctp);
@@ -38,10 +39,14 @@ class Timer {
             std::string timestamp = std::put_time(t, "%Y-%m-%d %T %Z");
             return(timestamp);
         }
-
+		*/
         long long int elapsed() {
             auto mElapsed = std::chrono::duration_cast<Resolution>(mStop-mStart).count();
             return(mElapsed);
+        }
+
+        void print() {
+            std::cout << "Elapsed: " << elapsed() << unit() << std::endl;
         }
 
         std::string unit() {
@@ -62,6 +67,7 @@ class Timer {
         }
 
     private:
+        bool mVerbose;
         std::chrono::time_point<std::chrono::high_resolution_clock> mStart, mStop;
 
 };
